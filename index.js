@@ -9,6 +9,6 @@ app.use(express.json())
 
 app.post('/login', userLogin)
 app.post('/users', addNewUser )
-app.patch('users/:uid', updateUser)
+app.patch('/users/:uid', updateUser)
 
 app.listen(PORT,() => console.log(`Listening to http://localhost:${PORT}....`))

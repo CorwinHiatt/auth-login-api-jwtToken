@@ -15,8 +15,8 @@ export async function userLogin(req, res) {
     return
  }
  //if we get here we have at least one matching user
- //let user = users[0]
- let [user] =  users
+ let user = users[0]
+//  let [user] =  users
  user.password = undefined
  const token = jwt.sign(user, secretKey)
  res.send({user, token})
@@ -29,19 +29,16 @@ export async function addNewUser(req, res){
     await db.collection('users').add({email: email.toLowerCase(), password}) 
     userLogin(req, res) // this order logs user in after done signing up
 }
-export async function updateUser(req, res) {
-    const token = req.header.authorization
-    const decodedToken = jwt.verify(token, secretKey)
-    const {uid} = req.params // profile they want to update 
-    if(uid !== decodedToken.uid) {
-        res.status(401).send({message: 'invalid tok ID'})
-        return
-    }
-
-    const db = dbConnect()
-    await db.collection('users').doc(uid).update(req.body)
-    let user =doc.data()
-    user.uid = doc.id 
-    user.password = undefined
-    res.status(202).send({message: 'update'})
-}
+   
+    export async function updateUser(req, res) {
+        const token = req.headers.authorization
+        const decodedToken = jwt.verify(token, secretKey)
+        const { uid } = req.params // profile they want to update
+        if(uid !== decodedToken.uid) {
+          res.status(401).send({ message: 'Invalid token ID' })
+          return
+        }
+        const db = dbConnect()
+        await db.collection('users').doc(uid).update(req.body)
+        res.status(202).send({ message: 'updated'})
+      }
