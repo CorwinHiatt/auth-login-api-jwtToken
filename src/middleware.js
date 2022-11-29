@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { secretKey } from '../secrets.js'
 
-export async function isUserReallyUser(req, res, next) {
+export function isUserReallyUser(req, res, next) {
    const token = req.headers.authorization
    //verify token and decode it
    const decodedToken = jwt.verify(token, secretKey)
@@ -11,5 +11,6 @@ export async function isUserReallyUser(req, res, next) {
     res.status(401).send({ message: 'Not Authorized' })
     return
    }
+   req.decoded = decodedToken
     next() //if we get here, we are good to go
 }
